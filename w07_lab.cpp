@@ -110,11 +110,11 @@ void two(long number)              // 345678
       // http://faculty.cs.niu.edu/~mcmahon/CS241/c241man/node83.html
       cout << left   // left justify all values in their fields.
            << setw(5) << i              // offset is 8 bytes
-           << setw(15) << &bow + i      // address at offset;
-           << setw(21) << *(&pLong + i +1) // the contents of mem at address
+           << setw(16) << &bow + i      // address at offset;
+           << setw(20) << *(&pLong + i +1) // the contents of mem at address
                                            //(pLong + offset) HEXIDECIMAL
-           << setw(22) << *(&bow + i)   // '<<' matches to the type, DECIMAL
-                                        // a long is 8 bytes.  double would 
+           << setw(19) << *(&bow + i)   // '<<' matches to the type, DECIMAL,
+                                        // a long, is 8 bytes.  double would 
                                         // have worked here as well
                                         //  << setw(20) << hex << *(&bow + i)
                                         // chars are 1 byte, 2 lines it up. 
