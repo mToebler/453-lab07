@@ -31,7 +31,7 @@ int main()
    
    cout << "\ta stack address:  " << &number           << endl;
    cout << "\ta code address:   " << (void *)main  << endl;
-   cout << "\ta heap address:   " << (const char *)passMessage       << endl;
+   cout << "\ta heap address:   " << (const void *)passMessage       << endl;
    // call the other functions
    one(number + 111111);     // 234567
 
