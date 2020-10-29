@@ -28,7 +28,10 @@ int main()
    cout << "\tmessage:          " << message           << endl;
    cout << "\tfunction pointer: ";
    pointerFunction();
-
+   
+   cout << "\ta stack address:  " << &number           << endl;
+   cout << "\ta code address:   " << (void *)main  << endl;
+   cout << "\ta heap address:   " << (const char *)passMessage       << endl;
    // call the other functions
    one(number + 111111);     // 234567
 
@@ -98,29 +101,32 @@ void two(long number)              // 345678
         << "-------------------+"
         << "-------------------+"
         << "-----------------+\n";
-   for (long i = 30; i >= -30; i--)   // You may need to change 24 to another number
+   long bow4 = bow3 + 111111; // 655555
+   for (long i = 35; i >= -30; i--)   // You may need to change 24 to another number
    {
       ////////////////////////////////////////////////
       // Insert code here to display the callstack
-      // for formatting tips see: 
+      // formatting tips used from: 
       // http://faculty.cs.niu.edu/~mcmahon/CS241/c241man/node83.html
       cout << left   // left justify all values in their fields.
            << setw(5) << i              // offset is 8 bytes
            << setw(15) << &bow + i      // address at offset;
-           << setw(21) << *(&pLong + i +1) // the contents of mem at address(pLong + offset)
-           << setw(22) << *(&bow + i)   // << outputs to the type
-                                        // a long is 8 bytes.  double would work here as well
-                                        //   << setw(20) << hex << *(&bow + i)
-           << setw(18) << displayCharArray(text + (i * 8)) // to get to the base of text //
-      << endl;
-      ; // hexadecimal
+           << setw(21) << *(&pLong + i +1) // the contents of mem at address
+                                           //(pLong + offset) HEXIDECIMAL
+           << setw(22) << *(&bow + i)   // '<<' matches to the type, DECIMAL
+                                        // a long is 8 bytes.  double would 
+                                        // have worked here as well
+                                        //  << setw(20) << hex << *(&bow + i)
+                                        // chars are 1 byte, 2 lines it up. 
+           << setw(18) << displayCharArray(text + (i * 8) - (2 * 8)) // CHARS
+           << endl;
       //
       ////////////////////////////////////////////////
    }
 
    ////////////////////////////////////////////////
    // Insert code here to change the variables in main()
-                                                                                
+   // THIS IS ALL YOU TANNER:   
    // change text in main() to "*main**"
 
    // change number in main() to 654321
