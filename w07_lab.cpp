@@ -33,7 +33,7 @@ int main()
    cout << "\ta code address:   " << (void *)main  << endl;
    cout << "\ta heap address:   " << (const void *)passMessage       << endl;
    // call the other functions
-   one(number + 111111);     // 234567
+   one(number + 111111);     // 222222
 
    // display the new values of the local variables
    cout << "main() - after\n";
@@ -64,7 +64,7 @@ string displayCharArray(const char * p)
 /**********************************************
  * ONE : The next item on the call stack
  **********************************************/
-void one(long number)               // 234567
+void one(long number)               // 222222
 {
    char text[8] = "**ONE**";
 
@@ -72,23 +72,23 @@ void one(long number)               // 234567
    cout << "\tmessage: " << (void *)failMessage << endl;
    cout << "\tfail():  " << (void *)fail        << endl;
 
-   two(number + 111111);    // 345678
+   two(number + 111111);    // 3333333
 }
 
 /**********************************************
  * TWO : The bottom of the call stack
  **********************************************/
-void two(long number)              // 345678
+void two(long number)              // 333333
 {
    // start your display of the stack from this point
-   long bow = number + 111111;     // 456789
+   long bow = number + 111111;     // 444444
    char text[8] = "**TWO**";
    long * pLong = NULL;
    // double * pLong = NULL;
    char * pChar = NULL;
    //TODO: remove this line and next 2
-   long bow2 = bow + 111111;     // 544444
-   long bow3 = bow2 + 111111; // 544444
+   long bow2 = bow + 111111;     // 555555
+   long bow3 = bow2 + 111111; // 666666
    // header for our table. Use these setw() offsets in your table
    cout << '[' << setw(2) << 'i' << ']'
         << setw(15) << "address"
@@ -101,8 +101,8 @@ void two(long number)              // 345678
         << "-------------------+"
         << "-------------------+"
         << "-----------------+\n";
-   long bow4 = bow3 + 111111; // 655555
-   for (long i = 35; i >= -30; i--)   // You may need to change 24 to another number
+   long bow4 = bow3 + 111111; // 777777
+   for (long i = 35; i >= -30; i--)
    {
       ////////////////////////////////////////////////
       // Insert code here to display the callstack
@@ -126,15 +126,26 @@ void two(long number)              // 345678
 
    ////////////////////////////////////////////////
    // Insert code here to change the variables in main()
-   // THIS IS ALL YOU TANNER:   
+
    // change text in main() to "*main**"
+   
+   //*(&bow + 32) = static_cast<long>("*main**");
+   *(&bow + 32) = 11868602724609322; // Set the decimal value to the value of "*main**"
 
    // change number in main() to 654321
+   // This DOES work, but its hard coded to 30 indexes after bow. If something is added or deleted from the 
+   // program, the stack would be different and this would not change the correct address's data
+   *(&bow + 30) = 654321;
 
    // change pointerFunction in main() to point to pass
+   // TANNER'S THOUGHTS: I know that the "pointerMessage" address is at bow + 29 (index 29), but I
+   // don't know how to change it to point to the pointer "pass"
+    
 
    // change message in main() to point to passMessage
-
+   // TANNER'S THOUGHTS: I know that the "message" address is at bow + 28 (index 28),
+   // but I don't know how to change it to point to "passMessage"
+   
    //
    ////////////////////////////////////////////////
 }
