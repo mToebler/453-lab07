@@ -1,0 +1,4 @@
+Double: 8
+Long: 8
+Int: 4
+Char: 1
