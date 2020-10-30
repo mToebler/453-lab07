@@ -127,50 +127,37 @@ void two(long number)              // 333333
    // Insert code here to change the variables in main()
 
    // change text in main() to "*main**"
-   /// MARK'S THOUGHTS: I'm not liking this fixed offest approach.
-   /// if it's what we need to do, ok. What other ways might this
-   /// be done? Searching for the location of 11868464746679594 (*MAIN**)
-   /// and then changing it? Same with the others that use hard offsets.
-   /// Ex.:
-   // keep bow's value where it is:
    int iBow;
-   for (iBow = 1; *(&bow + iBow) != 11868464746679594; iBow++)
+
+   // Loop through the offsets from "bow" until you find "*MAIN**"
+   for (iBow = 1; *(&bow + iBow) != 11868464746679594 || iBow == 100; iBow++)
+      // An empty loop. This just sets the value of iBow to get the offset
       ;
+   // The decimal version of "*main**". This makes the char array in main() lowercase
    *(&bow + iBow) = 11868602724609322;
-   /// CAN YOU DO THE REST TANNER IF YOU AGREE THIS IS MORE ROBUST?
-   //*(&bow + 32) = static_cast<long>("*main**");
-   // *(&bow + 28) = 11868602724609322; // Set the decimal value to the value of "*main**"
+
 
    // change number in main() to 654321
-   // This DOES work, but its hard coded to 30 indexes after bow. If something is added or deleted from the 
-   // program, the stack would be different and this would not change the correct address's data
-   *(&bow + 26) = 654321;
+   // Loop through the offsets of "bow" until you find the decimal value "123456"
+   for (iBow = 1; *(&bow + iBow) != 123456 || iBow == 100; iBow++)
+      // An empty loop. This just sets the value of iBow to get the offset
+      ;
+   *(&bow + iBow) = 654321; // Change the value to "654321"
+
 
    // change pointerFunction in main() to point to pass
-   // TANNER'S THOUGHTS: I know that the "pointerMessage" address is at bow + 29 (index 29), but I
-   // don't know how to change it to point to the pointer "pass"
-   /// MARK'S THOUGHTS: If we declare a new long pointer it will 
-   /// be at the "top" of the stack.
    long *pBow;
-   /// through pointer arithmetic we can jump between addresses just
-   /// like we did above with bow above, but we search for fail. 
-   /// (it is a long, just a void *() long).
+   // through pointer arithmetic we can jump between addresses just
+   // like we did above with bow, but we search for fail. 
+   // (it is a long, just a void *() long).
    for (pBow = (long *)&pBow; *pBow != (long)fail; pBow++)
-      // this is an empty for loop
       ;
    /// verify
    assert(*pBow == (long)fail);
-   /// Now that we have the right address, change it.
+   // Now that we have the right address, change it.
    *pBow = (long)pass;
 
    // change message in main() to point to passMessage
-   // TANNER'S THOUGHTS: I know that the "message" address is at bow + 28 (index 28),
-   // but I don't know how to change it to point to "passMessage"
-   /// MARK'S THOUGHTS: The pointer is a constant in this case, only 
-   /// points to one address, but the contents there can change.
-   // cout << "Bow + 28: "<< (&bow + 28) << endl;
-   // cout << "passMessage: "<< (const void *)passMessage << endl;
-   // *(&bow + 28) = (const void *)passMessage;
    /// going for a (long) casting of a (long *) of a (const void *)
    *(&bow + 24) = (long)(long *)passMessage;
    //
