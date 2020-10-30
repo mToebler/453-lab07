@@ -17,7 +17,6 @@ int main()
 {
    char text[8] = "*MAIN**";
    long number = 123456;
-   // long number = 111111;
    void (*pointerFunction)() = fail;
    const char * message = failMessage;
 
@@ -34,11 +33,8 @@ int main()
    // cout << "\tpass address:   " << (void *)pass  << endl;
    // cout << "\tfail address:   " << (void *)fail  << endl;
    
-   // cout << "\ta stack address:  " << &number           << endl;
-   // cout << "\ta code address:   " << (void *)main  << endl;
-   // cout << "\ta heap address:   " << (const void *)passMessage       << endl;
    // call the other functions
-   one(number + 111111);     // 222222
+   one(number + 111111);
 
    // display the new values of the local variables
    cout << "main() - after\n";
@@ -68,7 +64,7 @@ string displayCharArray(const char * p)
 /**********************************************
  * ONE : The next item on the call stack
  **********************************************/
-void one(long number)               // 222222
+void one(long number)
 {
    char text[8] = "**ONE**";
 
@@ -76,19 +72,20 @@ void one(long number)               // 222222
    cout << "\tmessage: " << (void *)failMessage << endl;
    cout << "\tfail():  " << (void *)fail        << endl;
 
-   two(number + 111111);    // 3333333
+   two(number + 111111);
 }
 
 /**********************************************
  * TWO : The bottom of the call stack
  **********************************************/
-void two(long number)              // 333333
+void two(long number)
 {
    // start your display of the stack from this point
-   long bow = number + 111111;     // 444444
+   long bow = number + 111111;
    char text[8] = "**TWO**";
    long * pLong = NULL;
    char * pChar = NULL;
+
    // header for our table. Use these setw() offsets in your table
    cout << '[' << setw(2) << 'i' << ']'
         << setw(15) << "address"
@@ -107,16 +104,16 @@ void two(long number)              // 333333
       // Insert code here to display the callstack
       // formatting tips used from: 
       // http://faculty.cs.niu.edu/~mcmahon/CS241/c241man/node83.html
-      cout << left   // left justify all values in their fields.
-           << setw(5) << i              // offset is 8 bytes
-           << setw(16) << &bow + i      // ADDRESS at offset;
+      cout << left                         // left justify all values in their fields.
+           << setw(5) << i                 // offset is 8 bytes
+           << setw(16) << &bow + i         // ADDRESS at offset;
            << setw(20) << *(&pLong + i +1) // the contents at address
-                                           //(pLong + offset) HEXIDECIMAL
-           << setw(19) << *(&bow + i)   // '<<' matches to the type, DECIMAL,
-                                        // a long, is 8 bytes. 
-                                        //  << setw(20) << hex << *(&bow + i)
-                                        // chars are 1 byte, 2 lines it up. 
-                                        // on my macOS.
+                                           // (pLong + offset) HEXIDECIMAL
+           << setw(19) << *(&bow + i)      // '<<' matches to the type, DECIMAL,
+                                           // a long, is 8 bytes. 
+                                           // << setw(20) << hex << *(&bow + i)
+                                           // chars are 1 byte, 2 lines it up. 
+                                           // on my macOS.
            << setw(18) << displayCharArray(text + (i * 8) - (2 * 8)) // CHARS
            << endl;
       //
@@ -160,6 +157,12 @@ void two(long number)              // 333333
    // change message in main() to point to passMessage
    /// going for a (long) casting of a (long *) of a (const void *)
    *(&bow + 24) = (long)(long *)passMessage;
+
+
+   // Display the different types of aaddresses
+   cout << "\n\tA Stack Address: " << &number                   << endl;
+   cout << "\tA Code Address:  " << (void *)main              << endl;
+   cout << "\tA Heap Address:  " << (const void *)passMessage << endl << endl;
    //
    ////////////////////////////////////////////////
 }
