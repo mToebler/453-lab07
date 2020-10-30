@@ -28,11 +28,6 @@ int main()
    cout << "\tfunction pointer: ";
    pointerFunction();
    
-   // cout << "\tpassMessage address:  " << (const void *)passMessage  << endl;
-   // cout << "\tfailMessage address:  " << (const void *)failMessage  << endl;
-   // cout << "\tpass address:   " << (void *)pass  << endl;
-   // cout << "\tfail address:   " << (void *)fail  << endl;
-   
    // call the other functions
    one(number + 111111);
 
