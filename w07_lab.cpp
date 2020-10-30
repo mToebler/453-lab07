@@ -16,8 +16,8 @@ const char * failMessage = ":(";
 int main()
 {
    char text[8] = "*MAIN**";
-   // long number = 123456;
-   long number = 111111;
+   long number = 123456;
+   // long number = 111111;
    void (*pointerFunction)() = fail;
    const char * message = failMessage;
 
@@ -29,9 +29,10 @@ int main()
    cout << "\tfunction pointer: ";
    pointerFunction();
    
-   cout << "\tpassMessage address:  " << (const void *)passMessage           << endl;
-   cout << "\tpass address:   " << (void *)pass  << endl;
-   cout << "\tfail address:   " << (void *)fail  << endl;
+   // cout << "\tpassMessage address:  " << (const void *)passMessage  << endl;
+   // cout << "\tfailMessage address:  " << (const void *)failMessage  << endl;
+   // cout << "\tpass address:   " << (void *)pass  << endl;
+   // cout << "\tfail address:   " << (void *)fail  << endl;
    
    // cout << "\ta stack address:  " << &number           << endl;
    // cout << "\ta code address:   " << (void *)main  << endl;
@@ -56,7 +57,6 @@ int main()
  * by removing all the unprintable characters and replacing
  * them with a dot
  ***********************************************/
-// string displayCharArray(const char * p)
 string displayCharArray(const char * p) 
 {
    string output;
@@ -88,11 +88,7 @@ void two(long number)              // 333333
    long bow = number + 111111;     // 444444
    char text[8] = "**TWO**";
    long * pLong = NULL;
-   // double * pLong = NULL;
    char * pChar = NULL;
-   //TODO: remove this line and next 2
-   long bow2 = bow + 111111;     // 555555
-   long bow3 = bow2 + 111111; // 666666
    // header for our table. Use these setw() offsets in your table
    cout << '[' << setw(2) << 'i' << ']'
         << setw(15) << "address"
@@ -104,9 +100,8 @@ void two(long number)              // 333333
         << "---------------+"
         << "-------------------+"
         << "-------------------+"
-        << "-----------------+\n";
-   long bow4 = bow3 + 111111; // 777777
-   for (long i = 35; i >= -30; i--)
+        << "-----------------+\n";       
+   for (long i = 35; i >= -10; i--)
    {
       ////////////////////////////////////////////////
       // Insert code here to display the callstack
@@ -114,14 +109,14 @@ void two(long number)              // 333333
       // http://faculty.cs.niu.edu/~mcmahon/CS241/c241man/node83.html
       cout << left   // left justify all values in their fields.
            << setw(5) << i              // offset is 8 bytes
-           << setw(16) << &bow + i      // address at offset;
-           << setw(20) << *(&pLong + i +1) // the contents of mem at address
+           << setw(16) << &bow + i      // ADDRESS at offset;
+           << setw(20) << *(&pLong + i +1) // the contents at address
                                            //(pLong + offset) HEXIDECIMAL
            << setw(19) << *(&bow + i)   // '<<' matches to the type, DECIMAL,
-                                        // a long, is 8 bytes.  double would 
-                                        // have worked here as well
+                                        // a long, is 8 bytes. 
                                         //  << setw(20) << hex << *(&bow + i)
                                         // chars are 1 byte, 2 lines it up. 
+                                        // on my macOS.
            << setw(18) << displayCharArray(text + (i * 8) - (2 * 8)) // CHARS
            << endl;
       //
@@ -132,34 +127,52 @@ void two(long number)              // 333333
    // Insert code here to change the variables in main()
 
    // change text in main() to "*main**"
-   
+   /// MARK'S THOUGHTS: I'm not liking this fixed offest approach.
+   /// if it's what we need to do, ok. What other ways might this
+   /// be done? Searching for the location of 11868464746679594 (*MAIN**)
+   /// and then changing it? Same with the others that use hard offsets.
+   /// Ex.:
+   // keep bow's value where it is:
+   int iBow;
+   for (iBow = 1; *(&bow + iBow) != 11868464746679594; iBow++)
+      ;
+   *(&bow + iBow) = 11868602724609322;
+   /// CAN YOU DO THE REST TANNER IF YOU AGREE THIS IS MORE ROBUST?
    //*(&bow + 32) = static_cast<long>("*main**");
-   *(&bow + 32) = 11868602724609322; // Set the decimal value to the value of "*main**"
+   // *(&bow + 28) = 11868602724609322; // Set the decimal value to the value of "*main**"
 
    // change number in main() to 654321
    // This DOES work, but its hard coded to 30 indexes after bow. If something is added or deleted from the 
    // program, the stack would be different and this would not change the correct address's data
-   *(&bow + 30) = 654321;
+   *(&bow + 26) = 654321;
 
    // change pointerFunction in main() to point to pass
    // TANNER'S THOUGHTS: I know that the "pointerMessage" address is at bow + 29 (index 29), but I
    // don't know how to change it to point to the pointer "pass"
-   /// MARK'S THOUGHTS: If we declare a new long pointer
+   /// MARK'S THOUGHTS: If we declare a new long pointer it will 
+   /// be at the "top" of the stack.
    long *pBow;
-   /// we can do what we did above with bow above, searching for fail, 
-   /// but cast it as a long (it is a long, just a void *() long).
+   /// through pointer arithmetic we can jump between addresses just
+   /// like we did above with bow above, but we search for fail. 
+   /// (it is a long, just a void *() long).
    for (pBow = (long *)&pBow; *pBow != (long)fail; pBow++)
       // this is an empty for loop
       ;
+   /// verify
    assert(*pBow == (long)fail);
-   /// Now that we have the right address, set it.
+   /// Now that we have the right address, change it.
    *pBow = (long)pass;
 
    // change message in main() to point to passMessage
    // TANNER'S THOUGHTS: I know that the "message" address is at bow + 28 (index 28),
    // but I don't know how to change it to point to "passMessage"
-   /// MARK'S THOUGHTS: do you think we could do something like what we did 
-   /// for fail/pass above?
+   /// MARK'S THOUGHTS: The pointer is a constant in this case, only 
+   /// points to one address, but the contents there can change.
+   // cout << "Bow + 28: "<< (&bow + 28) << endl;
+   // cout << "passMessage: "<< (const void *)passMessage << endl;
+   // *(&bow + 28) = (const void *)passMessage;
+   /// going for a (long) casting of a (long *) of a (const void *)
+   *(&bow + 24) = (long)(long *)passMessage;
    //
    ////////////////////////////////////////////////
 }
