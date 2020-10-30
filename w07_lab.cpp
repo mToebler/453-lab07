@@ -29,9 +29,13 @@ int main()
    cout << "\tfunction pointer: ";
    pointerFunction();
    
-   cout << "\ta stack address:  " << &number           << endl;
-   cout << "\ta code address:   " << (void *)main  << endl;
-   cout << "\ta heap address:   " << (const void *)passMessage       << endl;
+   cout << "\tpassMessage address:  " << (const void *)passMessage           << endl;
+   cout << "\tpass address:   " << (void *)pass  << endl;
+   cout << "\tfail address:   " << (void *)fail  << endl;
+   
+   // cout << "\ta stack address:  " << &number           << endl;
+   // cout << "\ta code address:   " << (void *)main  << endl;
+   // cout << "\ta heap address:   " << (const void *)passMessage       << endl;
    // call the other functions
    one(number + 111111);     // 222222
 
@@ -140,12 +144,22 @@ void two(long number)              // 333333
    // change pointerFunction in main() to point to pass
    // TANNER'S THOUGHTS: I know that the "pointerMessage" address is at bow + 29 (index 29), but I
    // don't know how to change it to point to the pointer "pass"
-    
+   /// MARK'S THOUGHTS: If we declare a new long pointer
+   long *pBow;
+   /// we can do what we did above with bow above, searching for fail, 
+   /// but cast it as a long (it is a long, just a void *() long).
+   for (pBow = (long *)&pBow; *pBow != (long)fail; pBow++)
+      // this is an empty for loop
+      ;
+   assert(*pBow == (long)fail);
+   /// Now that we have the right address, set it.
+   *pBow = (long)pass;
 
    // change message in main() to point to passMessage
    // TANNER'S THOUGHTS: I know that the "message" address is at bow + 28 (index 28),
    // but I don't know how to change it to point to "passMessage"
-   
+   /// MARK'S THOUGHTS: do you think we could do something like what we did 
+   /// for fail/pass above?
    //
    ////////////////////////////////////////////////
 }
