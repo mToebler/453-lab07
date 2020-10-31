@@ -125,6 +125,7 @@ void two(long number)            // 345678
    // but the hardcoded values fell apart when more was piled/removed
    // from the stack. 
    int iBow;
+   int *pHeap = NULL;
    // Loop through the offsets from "bow" until you find "*MAIN**"
    // Find the current value and store the offset in iBow.
    for (iBow = 1; *(&bow + iBow) != 11868464746679594 || iBow == 100; iBow++)
@@ -169,12 +170,13 @@ void two(long number)            // 345678
 
 
    // Display the different types of aaddresses
-   void *pHeap = new int(1);
+   pHeap = new int(1);
    cout << "\n\tA Stack Address: " << &number                 << endl
         << "\tA Code Address:  " << (void *)main              << endl
         << "\tA Heap Address:  " << (void *)pHeap << endl 
         << endl;
    delete (pHeap);
+   pHeap = NULL;
    //
    ////////////////////////////////////////////////
 }
