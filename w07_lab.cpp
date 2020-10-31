@@ -100,18 +100,22 @@ void two(long number)            // 345678
       ////////////////////////////////////////////////
       // Insert code here to display the callstack
       // formatting tips used from: 
-      // http://faculty.cs.niu.edu/~mcmahon/CS241/c241man/node83.html      
-      cout << left << right                        // left justify all values in their fields.
-           << setw(3) << i                // offset is 8 bytes
+      // http://faculty.cs.niu.edu/~mcmahon/CS241/c241man/node83.html  
+      // reinterpret_cast: compiler directive
+      // https://en.cppreference.com/w/cpp/language/reinterpret_cast    
+      char * charArray = reinterpret_cast <char *> (&bow + i);
+      cout << left << right << dec // right justify all values in their fields.
+           << setw(3)  << i                // offset is 8 bytes
            << setw(16) << &bow + i         // ADDRESS at offset;
-           << setw(20) << *(&pLong + i +1) // the contents at address
-                                           // (pLong + offset) HEXIDECIMAL
-           << setw(21) << *(&bow + i)      // '<<' matches to the type, DECIMAL,
+      //   << setw(20) << *(&pLong + i +1) // the contents at address
+           << setw(20) << hex << *(&bow + i)                                            
+                                             // (pLong + offset) HEXIDECIMAL
+           << setw(21) << dec << *(&bow + i) // DECIMAL,
                                            // a long, is 8 bytes. 
-                                           // << setw(20) << hex << *(&bow + i)
                                            // chars are 1 byte, 2 lines it up. 
                                            // on my macOS.
-           << setw(18) << displayCharArray(text + (i * 8) - (2 * 8)) // CHARS
+           << setw(18) << displayCharArray(charArray) // CHARS
+      //   << setw(18) << displayCharArray(text + (i * 8) - (2 * 8)) // CHARS
            << endl;
       //
       ////////////////////////////////////////////////
@@ -125,7 +129,7 @@ void two(long number)            // 345678
    // but the hardcoded values fell apart when more was piled/removed
    // from the stack. 
    int iBow;
-   int *pHeap = NULL;
+   int * pHeap = NULL;
    // Loop through the offsets from "bow" until you find "*MAIN**"
    // Find the current value and store the offset in iBow.
    for (iBow = 1; *(&bow + iBow) != 11868464746679594 || iBow == 100; iBow++)
@@ -148,22 +152,17 @@ void two(long number)            // 345678
    // like we did above with bow, but we search for fail. 
    // (it is a long, just a void *() long).
    for (iBow = 1; *(&bow + iBow) != (long)fail || iBow == 100; iBow++)
-   // for (pBow = (long *)&pBow; *pBow != (long)fail; pBow++)
       ; // An empty loop. Sets the value of iBow to the right offset
-   /// verify
+   // verify
    assert(*(&bow + iBow) == (long)fail);
-   // assert(*pBow == (long)fail);
    // Now that we have the right address, change it.
    *(&bow + iBow) = (long)pass;
-   // *pBow = (long)pass;
 
    // change message in main() to point to passMessage
-   /// going for a (long) casting of a (long *) of a (const void *)
-   for (iBow = 1; 
-         *(&bow + iBow) != (long)(long *)failMessage 
-         || iBow == 100; 
-         iBow++
-       )
+   // going for a (long) casting of a (long *) of a (const void *)
+   for (iBow = 1;
+        *(&bow + iBow) != (long)(long *)failMessage || iBow == 200;
+        iBow++)
       ;
 
    *(&bow + iBow) = (long)(long *)passMessage;
@@ -171,9 +170,9 @@ void two(long number)            // 345678
 
    // Display the different types of aaddresses
    pHeap = new int(1);
-   cout << "\n\tA Stack Address: " << &number                 << endl
-        << "\tA Code Address:  " << (void *)main              << endl
-        << "\tA Heap Address:  " << (void *)pHeap << endl 
+   cout << "\n\tA Stack Address: " << &number      << endl
+        << "\tA Code Address:  " << (void *) main  << endl
+        << "\tA Heap Address:  " << (void *) pHeap << endl 
         << endl;
    delete (pHeap);
    pHeap = NULL;
