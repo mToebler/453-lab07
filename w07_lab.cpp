@@ -86,13 +86,13 @@ void two(long number)            // 345678
    // header for our table. Use these setw() offsets in your table
    cout << '[' << setw(1) << 'i' << ']'
         << setw(16) << "address"
-        << setw(20) << "hexadecimal"
+        << setw(18) << "hexadecimal"
         << setw(21) << "decimal"
         << setw(18) << "characters"
         << endl;
    cout << "--+"
         << "----------------+"
-        << "-------------------+"
+        << "-----------------+"
         << "--------------------+"
         << "-----------------+\n";       
    for (long i = 35; i >= -10; i--)
@@ -108,7 +108,7 @@ void two(long number)            // 345678
            << setw(3)  << i                // offset is 8 bytes
            << setw(16) << &bow + i         // ADDRESS at offset;
       //   << setw(20) << *(&pLong + i +1) // the contents at address
-           << setw(20) << hex << *(&bow + i)                                            
+           << setw(18) << hex << *(&bow + i)                                            
                                              // (pLong + offset) HEXIDECIMAL
            << setw(21) << dec << *(&bow + i) // DECIMAL,
                                            // a long, is 8 bytes. 
