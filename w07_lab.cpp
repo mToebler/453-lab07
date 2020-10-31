@@ -59,7 +59,7 @@ string displayCharArray(const char * p)
 /**********************************************
  * ONE : The next item on the call stack
  **********************************************/
-void one(long number)
+void one(long number)            // 234567
 {
    char text[8] = "**ONE**";
 
@@ -67,16 +67,16 @@ void one(long number)
    cout << "\tmessage: " << (void *)failMessage << endl;
    cout << "\tfail():  " << (void *)fail        << endl;
 
-   two(number + 111111);
+   two(number + 111111);         // 345678
 }
 
 /**********************************************
  * TWO : The bottom of the call stack
  **********************************************/
-void two(long number)
+void two(long number)            // 345678
 {
    // start your display of the stack from this point
-   long bow = number + 111111;
+   long bow = number + 111111;   // 456789
    char text[8] = "**TWO**";
    long * pLong = NULL;
    char * pChar = NULL;
@@ -155,9 +155,10 @@ void two(long number)
 
 
    // Display the different types of aaddresses
-   cout << "\n\tA Stack Address: " << &number                   << endl;
-   cout << "\tA Code Address:  " << (void *)main              << endl;
-   cout << "\tA Heap Address:  " << (const void *)passMessage << endl << endl;
+   cout << "\n\tA Stack Address: " << &number                 << endl
+        << "\tA Code Address:  " << (void *)main              << endl
+        << "\tA Heap Address:  " << (const void *)passMessage << endl 
+        << endl;
    //
    ////////////////////////////////////////////////
 }
