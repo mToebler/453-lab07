@@ -1,6 +1,8 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <assert.h>
+
 using namespace std;
 
 void one(long number);
@@ -82,29 +84,29 @@ void two(long number)            // 345678
    char * pChar = NULL;
 
    // header for our table. Use these setw() offsets in your table
-   cout << '[' << setw(2) << 'i' << ']'
-        << setw(15) << "address"
+   cout << '[' << setw(1) << 'i' << ']'
+        << setw(16) << "address"
         << setw(20) << "hexadecimal"
-        << setw(20) << "decimal"
+        << setw(21) << "decimal"
         << setw(18) << "characters"
         << endl;
-   cout << "----+"
-        << "---------------+"
+   cout << "--+"
+        << "----------------+"
         << "-------------------+"
-        << "-------------------+"
+        << "--------------------+"
         << "-----------------+\n";       
    for (long i = 35; i >= -10; i--)
    {
       ////////////////////////////////////////////////
       // Insert code here to display the callstack
       // formatting tips used from: 
-      // http://faculty.cs.niu.edu/~mcmahon/CS241/c241man/node83.html
-      cout << left                         // left justify all values in their fields.
-           << setw(5) << i                 // offset is 8 bytes
+      // http://faculty.cs.niu.edu/~mcmahon/CS241/c241man/node83.html      
+      cout << left << right                        // left justify all values in their fields.
+           << setw(3) << i                // offset is 8 bytes
            << setw(16) << &bow + i         // ADDRESS at offset;
            << setw(20) << *(&pLong + i +1) // the contents at address
                                            // (pLong + offset) HEXIDECIMAL
-           << setw(19) << *(&bow + i)      // '<<' matches to the type, DECIMAL,
+           << setw(21) << *(&bow + i)      // '<<' matches to the type, DECIMAL,
                                            // a long, is 8 bytes. 
                                            // << setw(20) << hex << *(&bow + i)
                                            // chars are 1 byte, 2 lines it up. 
@@ -119,46 +121,60 @@ void two(long number)            // 345678
    // Insert code here to change the variables in main()
 
    // change text in main() to "*main**"
+   // Originally we used bow's offsets explicity, e.g., *(&bow + 28)
+   // but the hardcoded values fell apart when more was piled/removed
+   // from the stack. 
    int iBow;
-
    // Loop through the offsets from "bow" until you find "*MAIN**"
+   // Find the current value and store the offset in iBow.
    for (iBow = 1; *(&bow + iBow) != 11868464746679594 || iBow == 100; iBow++)
-      // An empty loop. This just sets the value of iBow to get the offset
-      ;
-   // The decimal version of "*main**". This makes the char array in main() lowercase
+      ; // An empty loop. Sets the value of iBow to the right offset
+   // The decimal version of "*main**". This overwrites the char * in
+   // main() with lowercase values
    *(&bow + iBow) = 11868602724609322;
 
-
    // change number in main() to 654321
-   // Loop through the offsets of "bow" until you find the decimal value "123456"
+   // Loop through the offsets from "bow" until you find the decimal 
+   // value "123456"
    for (iBow = 1; *(&bow + iBow) != 123456 || iBow == 100; iBow++)
-      // An empty loop. This just sets the value of iBow to get the offset
-      ;
+      ; // An empty loop. Sets the value of iBow to the right offset
    *(&bow + iBow) = 654321; // Change the value to "654321"
 
 
    // change pointerFunction in main() to point to pass
-   long *pBow;
+   
    // through pointer arithmetic we can jump between addresses just
    // like we did above with bow, but we search for fail. 
    // (it is a long, just a void *() long).
-   for (pBow = (long *)&pBow; *pBow != (long)fail; pBow++)
-      ;
+   for (iBow = 1; *(&bow + iBow) != (long)fail || iBow == 100; iBow++)
+   // for (pBow = (long *)&pBow; *pBow != (long)fail; pBow++)
+      ; // An empty loop. Sets the value of iBow to the right offset
    /// verify
-   assert(*pBow == (long)fail);
+   assert(*(&bow + iBow) == (long)fail);
+   // assert(*pBow == (long)fail);
    // Now that we have the right address, change it.
-   *pBow = (long)pass;
+   *(&bow + iBow) = (long)pass;
+   // *pBow = (long)pass;
 
    // change message in main() to point to passMessage
    /// going for a (long) casting of a (long *) of a (const void *)
-   *(&bow + 24) = (long)(long *)passMessage;
+   for (iBow = 1; 
+         *(&bow + iBow) != (long)(long *)failMessage 
+         || iBow == 100; 
+         iBow++
+       )
+      ;
+
+   *(&bow + iBow) = (long)(long *)passMessage;
 
 
    // Display the different types of aaddresses
+   void *pHeap = new int(1);
    cout << "\n\tA Stack Address: " << &number                 << endl
         << "\tA Code Address:  " << (void *)main              << endl
-        << "\tA Heap Address:  " << (const void *)passMessage << endl 
+        << "\tA Heap Address:  " << (void *)pHeap << endl 
         << endl;
+   delete (pHeap);
    //
    ////////////////////////////////////////////////
 }
